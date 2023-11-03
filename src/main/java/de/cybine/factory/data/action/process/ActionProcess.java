@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.context.ActionContextId;
 import de.cybine.factory.data.util.UUIDv7;
+import de.cybine.factory.service.action.ActionData;
 import de.cybine.factory.util.Views;
 import de.cybine.factory.util.WithId;
 import lombok.AccessLevel;
@@ -62,7 +63,7 @@ public class ActionProcess implements Serializable, WithId<ActionProcessId>
     private final ZonedDateTime dueAt;
 
     @JsonProperty("data")
-    private final Object data;
+    private final ActionData<?> data;
 
     public Optional<Integer> getPriority( )
     {
@@ -90,9 +91,9 @@ public class ActionProcess implements Serializable, WithId<ActionProcessId>
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> getData( )
+    public <T> Optional<ActionData<T>> getData( )
     {
-        return Optional.ofNullable((T) this.data);
+        return Optional.ofNullable((ActionData<T>) this.data);
     }
 
     @Override

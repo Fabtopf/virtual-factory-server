@@ -55,7 +55,7 @@ public class ActionProcessMapper implements EntityMapper<ActionProcessEntity, Ac
                             .description(entity.getDescription().orElse(null))
                             .createdAt(entity.getCreatedAt())
                             .dueAt(entity.getDueAt().orElse(null))
-                            .data(entity.getData().map(ActionData::data).orElse(null))
+                            .data(entity.getData().orElse(null))
                             .build();
     }
 }

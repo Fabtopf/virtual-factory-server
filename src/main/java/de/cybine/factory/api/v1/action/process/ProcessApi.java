@@ -6,6 +6,7 @@ import de.cybine.factory.util.api.query.ApiCountQuery;
 import de.cybine.factory.util.api.query.ApiOptionQuery;
 import de.cybine.factory.util.api.query.ApiQuery;
 import de.cybine.factory.util.api.response.ApiResponse;
+import de.cybine.factory.util.cloudevent.CloudEvent;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -34,6 +35,15 @@ public interface ProcessApi
     @GET
     @Path("/find/correlation-id/{correlation-id}")
     RestResponse<ApiResponse<List<ActionProcess>>> fetchByCorrelationId(
+            @PathParam("correlation-id") UUID correlationId);
+
+    @GET
+    @Path("/cloud-event/event-id/{event-id}")
+    RestResponse<ApiResponse<CloudEvent>> fetchCloudEventByEventId(@PathParam("event-id") UUID eventId);
+
+    @GET
+    @Path("/cloud-event/correlation-id/{correlation-id}")
+    RestResponse<ApiResponse<List<CloudEvent>>> fetchCloudEventsByCorrelationId(
             @PathParam("correlation-id") UUID correlationId);
 
     @POST

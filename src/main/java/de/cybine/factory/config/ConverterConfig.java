@@ -5,6 +5,7 @@ import de.cybine.factory.data.action.context.ActionContextMapper;
 import de.cybine.factory.data.action.metadata.ActionMetadataMapper;
 import de.cybine.factory.data.action.process.ActionProcessMapper;
 import de.cybine.factory.util.api.converter.*;
+import de.cybine.factory.util.cloudevent.CloudEventConverter;
 import de.cybine.factory.util.converter.ConverterRegistry;
 import io.quarkus.runtime.Startup;
 import jakarta.annotation.PostConstruct;
@@ -18,7 +19,8 @@ public class ConverterConfig
 {
     private final ConverterRegistry registry;
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper      objectMapper;
+    private final ApplicationConfig applicationConfig;
 
     @PostConstruct
     public void setup( )
@@ -38,5 +40,6 @@ public class ConverterConfig
         this.registry.addEntityMapper(new ActionContextMapper());
         this.registry.addEntityMapper(new ActionMetadataMapper());
         this.registry.addEntityMapper(new ActionProcessMapper());
+        this.registry.addConverter(new CloudEventConverter(this.applicationConfig));
     }
 }

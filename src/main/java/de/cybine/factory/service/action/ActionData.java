@@ -3,10 +3,15 @@ package de.cybine.factory.service.action;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import io.quarkus.arc.Arc;
 
-public record ActionData<T>(@JsonProperty("@type") JavaType type, @JsonProperty("data") T data)
+public record ActionData<T>(
+        @JsonProperty("@type") @JsonSerialize(converter = ActionDataTypeSerializer.class) @JsonDeserialize(converter
+                = ActionDataTypeDeserializer.class) JavaType type,
+        @JsonProperty("value") T value)
 {
     public static <T> ActionData<T> of(T data)
     {
