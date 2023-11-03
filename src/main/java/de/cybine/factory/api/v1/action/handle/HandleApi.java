@@ -1,0 +1,53 @@
+package de.cybine.factory.api.v1.action.handle;
+
+import de.cybine.factory.data.action.context.ActionContext;
+import de.cybine.factory.data.action.process.ActionProcess;
+import de.cybine.factory.util.api.response.ApiResponse;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.reactive.RestResponse;
+
+import java.util.Map;
+import java.util.UUID;
+
+@Path("/api/v1/action/handle")
+@Tag(name = "ActionHandle Resource")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public interface HandleApi
+{
+    @POST
+    @Path("/create/{namespace}/{category}/{name}")
+    @Parameter(name = "namespace", required = true, description = "Namespace of the action-context")
+    @Parameter(name = "category", required = true, description = "Category of the action-context")
+    @Parameter(name = "name", required = true, description = "Name of the action-context")
+    @Parameter(name = "item-id", description = "ID of the item to apply the action to")
+    RestResponse<ApiResponse<ActionContext>> create(@PathParam("namespace") String namespace,
+            @PathParam("category") String category, @PathParam("name") String name,
+            @QueryParam("item-id") String itemId);
+
+    @POST
+    @Path("/terminate")
+    @Parameter(name = "correlation-id",
+               required = true,
+               description = "Correlation-ID of the action-context to terminate")
+    RestResponse<ApiResponse<Void>> terminate(@QueryParam("correlation-id") @NotNull UUID correlationId);
+
+    @POST
+    @Path("/process")
+    @Parameter(name = "correlation-id",
+               required = true,
+               description = "Correlation-ID of the action-context to process")
+    @Parameter(name = "event-id",
+               description =
+                       "Event-ID to optionally check for current state to avoid processing with out-of-date " +
+                               "information")
+    @Parameter(name = "action", required = true, description = "Action to perform (next-state of the context)")
+    @Parameter(name = "data", description = "Data to add to the process")
+    RestResponse<ApiResponse<ActionProcess>> process(@QueryParam("correlation-id") @NotNull UUID correlationId,
+            @QueryParam("event-id") UUID eventId, @QueryParam("action") @NotNull String action,
+            Map<String, Object> data);
+}
