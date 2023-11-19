@@ -6,6 +6,8 @@ import de.cybine.factory.service.action.ActionDataAttributeConverter;
 import de.cybine.factory.util.WithId;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -59,6 +61,7 @@ public class ActionProcessEntity implements Serializable, WithId<Long>
     @Column(name = ActionProcessEntity_.DUE_AT_COLUMN)
     private ZonedDateTime dueAt;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = ActionProcessEntity_.DATA_COLUMN)
     @Convert(converter = ActionDataAttributeConverter.class)
     private ActionData data;

@@ -1,11 +1,7 @@
 package de.cybine.factory.service.action;
 
-import de.cybine.factory.data.action.process.ActionProcess;
-import de.cybine.factory.data.action.process.ActionProcessMetadata;
 import lombok.*;
 
-import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 

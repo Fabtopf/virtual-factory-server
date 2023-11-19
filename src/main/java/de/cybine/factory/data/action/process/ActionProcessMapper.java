@@ -4,7 +4,6 @@ import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.context.ActionContextEntity;
 import de.cybine.factory.data.action.context.ActionContextId;
 import de.cybine.factory.data.util.primitive.Id;
-import de.cybine.factory.service.action.ActionData;
 import de.cybine.factory.util.converter.ConversionHelper;
 import de.cybine.factory.util.converter.EntityMapper;
 
@@ -37,7 +36,7 @@ public class ActionProcessMapper implements EntityMapper<ActionProcessEntity, Ac
                                   .creatorId(data.getCreatorId().orElse(null))
                                   .createdAt(data.getCreatedAt())
                                   .dueAt(data.getDueAt().orElse(null))
-                                  .data(data.getData().map(ActionData::of).orElse(null))
+                                  .data(data.getData().orElse(null))
                                   .build();
     }
 

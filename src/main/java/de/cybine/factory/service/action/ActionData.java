@@ -13,15 +13,15 @@ public record ActionData<T>(
                 = ActionDataTypeDeserializer.class) JavaType type,
         @JsonProperty("value") T value)
 {
-    public static <T> ActionData<T> of(T data)
+    public static <T> ActionData<T> of(T value)
     {
         TypeFactory typeFactory = Arc.container().select(ObjectMapper.class).get().getTypeFactory();
-        return new ActionData<>(typeFactory.constructType(data.getClass()), data);
+        return new ActionData<>(typeFactory.constructType(value.getClass()), value);
     }
 
-    public static <T> ActionData<T> of(T data, Class<?> containerType, Class<?>... parameterTypes)
+    public static <T> ActionData<T> of(T value, Class<?> containerType, Class<?>... parameterTypes)
     {
         TypeFactory typeFactory = Arc.container().select(ObjectMapper.class).get().getTypeFactory();
-        return new ActionData<>(typeFactory.constructParametricType(containerType, parameterTypes), data);
+        return new ActionData<>(typeFactory.constructParametricType(containerType, parameterTypes), value);
     }
 }

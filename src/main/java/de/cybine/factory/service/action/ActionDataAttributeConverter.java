@@ -8,13 +8,18 @@ import de.cybine.factory.exception.action.ActionProcessingException;
 import io.quarkus.arc.Arc;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Converter
 public class ActionDataAttributeConverter implements AttributeConverter<ActionData<?>, String>
 {
+    private final ActionDataTypeSerializer   typeSerializer   = new ActionDataTypeSerializer();
+    private final ActionDataTypeDeserializer typeDeserializer = new ActionDataTypeDeserializer();
+
     @Override
     public String convertToDatabaseColumn(ActionData<?> attribute)
     {
@@ -23,12 +28,8 @@ public class ActionDataAttributeConverter implements AttributeConverter<ActionDa
 
         try
         {
-            String type = this.getRegistry()
-                              .findTypeName(attribute.type())
-                              .orElseThrow(( ) -> new ActionProcessingException("Unknown action data type"));
-
             Map<String, Object> data = new HashMap<>();
-            data.put("@type", type);
+            data.put("@type", this.typeSerializer.convert(attribute.type()));
             data.put("value", attribute.value());
 
             return this.getObjectMapper().writeValueAsString(data);
@@ -48,10 +49,9 @@ public class ActionDataAttributeConverter implements AttributeConverter<ActionDa
         try
         {
             JsonNode jsonNode = this.getObjectMapper().readTree(dbData);
-            JavaType type = this.getRegistry()
-                                .findType(jsonNode.findValue("@type").asText())
-                                .orElseThrow(( ) -> new ActionProcessingException("Unknown action data type"));
+            String typeName = jsonNode.findValue("@type").asText();
 
+            JavaType type = this.typeDeserializer.convert(typeName);
             Object data = this.getObjectMapper().treeToValue(jsonNode.findValue("value"), type);
 
             return new ActionData<>(type, data);
@@ -65,10 +65,5 @@ public class ActionDataAttributeConverter implements AttributeConverter<ActionDa
     private ObjectMapper getObjectMapper( )
     {
         return Arc.container().select(ObjectMapper.class).get();
-    }
-
-    private ActionDataTypeRegistry getRegistry( )
-    {
-        return Arc.container().select(ActionDataTypeRegistry.class).get();
     }
 }
