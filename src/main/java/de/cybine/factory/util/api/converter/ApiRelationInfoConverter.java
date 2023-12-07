@@ -1,5 +1,6 @@
 package de.cybine.factory.util.api.converter;
 
+import de.cybine.factory.config.ApplicationConfig;
 import de.cybine.factory.exception.datasource.UnknownRelationException;
 import de.cybine.factory.util.api.query.ApiConditionInfo;
 import de.cybine.factory.util.api.query.ApiOrderInfo;
@@ -10,6 +11,7 @@ import de.cybine.factory.util.datasource.DatasourceConditionInfo;
 import de.cybine.factory.util.datasource.DatasourceFieldPath;
 import de.cybine.factory.util.datasource.DatasourceOrderInfo;
 import de.cybine.factory.util.datasource.DatasourceRelationInfo;
+import io.quarkus.arc.Arc;
 
 import java.util.Collections;
 
@@ -30,6 +32,9 @@ public class ApiRelationInfoConverter implements Converter<ApiRelationInfo, Data
     @Override
     public DatasourceRelationInfo convert(ApiRelationInfo input, ConversionHelper helper)
     {
+        if(input.getRelations() != null && !input.getRelations().isEmpty() && !this.allowMultiLevelRelations())
+            throw new UnknownRelationException("Cannot reference multiple relation levels");
+
         DatasourceFieldPath path = ApiQueryConverter.getFieldPathOrThrow(helper, input.getProperty());
         if (path.getLength() > 1)
             throw new UnknownRelationException(
@@ -45,8 +50,13 @@ public class ApiRelationInfoConverter implements Converter<ApiRelationInfo, Data
                                                       .map(input::getCondition))
                                      .order(helper.toList(ApiOrderInfo.class, DatasourceOrderInfo.class)
                                                   .apply(input::getOrder))
-                                     // Only allow one relation layer via the API
-                                     .relations(Collections.emptyList())
+                                     .relations(helper.toList(ApiRelationInfo.class, DatasourceRelationInfo.class)
+                                                      .apply(input::getRelations))
                                      .build();
+    }
+
+    private boolean allowMultiLevelRelations()
+    {
+        return Arc.container().select(ApplicationConfig.class).get().converter().allowMultiLevelRelations();
     }
 }

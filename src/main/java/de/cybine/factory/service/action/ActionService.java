@@ -16,6 +16,7 @@ import de.cybine.factory.util.converter.ConverterTree;
 import de.cybine.factory.util.datasource.*;
 import io.quarkus.runtime.Startup;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.ws.rs.core.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
@@ -23,9 +24,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.time.ZonedDateTime;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Startup
 @ApplicationScoped
@@ -74,8 +73,7 @@ public class ActionService
             ActionProcess process = ActionProcess.builder()
                                                  .context(ActionContext.builder().id(contextId).build())
                                                  .status(BaseActionProcessStatus.INITIALIZED.getName())
-                                                 .creatorId(this.securityContext.getUserPrincipal() != null ?
-                                                         this.securityContext.getUserPrincipal().getName() : null)
+                                                 .creatorId(this.getIdentityName().orElse(null))
                                                  .createdAt(ZonedDateTime.now())
                                                  .build();
 
@@ -152,15 +150,12 @@ public class ActionService
                 throw new ActionPreconditionException(null);
 
             ActionContextId contextId = ActionContextId.of(nextState.getContextId().getValue());
-            String creator = this.securityContext.getUserPrincipal() != null ?
-                    this.securityContext.getUserPrincipal().getName() : null;
-
             ActionProcess process = ActionProcess.builder()
                                                  .context(ActionContext.builder().id(contextId).build())
                                                  .status(nextState.getStatus())
                                                  .priority(nextState.getPriority().orElse(100))
                                                  .description(nextState.getDescription().orElse(null))
-                                                 .creatorId(creator)
+                                                 .creatorId(this.getIdentityName().orElse(null))
                                                  .createdAt(nextState.getCreatedAt())
                                                  .dueAt(nextState.getDueAt().orElse(null))
                                                  .data(nextState.getData().orElse(null))
@@ -275,5 +270,56 @@ public class ActionService
                           .findAny()
                           .map(processor::toItem)
                           .map(ConversionResult::result);
+    }
+
+    public Optional<ActionProcess> fetchCurrentState(UUID correlationId)
+    {
+        DatasourceConditionDetail<String> correlationIdEquals = DatasourceHelper.isEqual(
+                ActionContextEntity_.CORRELATION_ID, correlationId.toString());
+
+        DatasourceConditionInfo condition = DatasourceHelper.and(correlationIdEquals);
+        DatasourceRelationInfo contextRelation = DatasourceRelationInfo.builder()
+                                                                       .property(ActionProcessEntity_.CONTEXT.getName())
+                                                                       .condition(condition)
+                                                                       .build();
+
+        DatasourceQueryInterpreter<ActionProcessEntity> interpreter = DatasourceQueryInterpreter.of(
+                ActionProcessEntity.class, DatasourceQuery.builder()
+                                                          .relation(contextRelation)
+                                                          .order(DatasourceHelper.desc(ActionProcessEntity_.ID))
+                                                          .build());
+
+        ConversionProcessor<ActionProcessEntity, ActionProcess> processor = this.converterRegistry.getProcessor(
+                ActionProcessEntity.class, ActionProcess.class);
+
+        return interpreter.prepareDataQuery()
+                          .getResultStream()
+                          .findAny()
+                          .map(processor::toItem)
+                          .map(ConversionResult::result);
+    }
+
+    public List<String> fetchAvailableActions(UUID correlationId)
+    {
+        ActionProcess process = this.fetchCurrentState(correlationId).orElseThrow();
+        ActionMetadata metadata = this.metadataService.fetchByCorrelationId(correlationId).orElseThrow();
+
+        return this.processorRegistry.getPossibleActions(metadata.getNamespace(), metadata.getCategory(),
+                metadata.getName(), process.getStatus());
+    }
+
+    private Optional<String> getIdentityName()
+    {
+        try
+        {
+            if(this.securityContext.getUserPrincipal() == null)
+                return Optional.empty();
+
+            return Optional.ofNullable(this.securityContext.getUserPrincipal().getName());
+        }
+        catch (ContextNotActiveException | IllegalStateException exception)
+        {
+            return Optional.empty();
+        }
     }
 }

@@ -2,7 +2,7 @@ package de.cybine.factory.data.action.process;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.cybine.factory.data.action.context.ActionContextId;
-import de.cybine.factory.service.action.ActionData;
+import de.cybine.factory.service.action.data.ActionData;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,8 +1,8 @@
 package de.cybine.factory.data.action.process;
 
 import de.cybine.factory.data.action.context.ActionContextEntity;
-import de.cybine.factory.service.action.ActionData;
-import de.cybine.factory.service.action.ActionDataAttributeConverter;
+import de.cybine.factory.service.action.data.ActionData;
+import de.cybine.factory.service.action.data.ActionDataAttributeConverter;
 import de.cybine.factory.util.WithId;
 import jakarta.persistence.*;
 import lombok.*;

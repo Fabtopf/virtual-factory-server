@@ -32,6 +32,11 @@ public class ApiRelationInfo
     @JsonProperty("order")
     private final List<ApiOrderInfo> order;
 
+    @Valid
+    @Singular
+    @JsonProperty("relations")
+    private final List<ApiRelationInfo> relations;
+
     public Optional<ApiConditionInfo> getCondition( )
     {
         return Optional.ofNullable(this.condition);

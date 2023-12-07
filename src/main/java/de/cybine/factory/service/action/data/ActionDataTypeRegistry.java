@@ -1,4 +1,4 @@
-package de.cybine.factory.service.action;
+package de.cybine.factory.service.action.data;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;

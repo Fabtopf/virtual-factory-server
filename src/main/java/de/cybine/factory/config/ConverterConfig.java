@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.cybine.factory.data.action.context.ActionContextMapper;
 import de.cybine.factory.data.action.metadata.ActionMetadataMapper;
 import de.cybine.factory.data.action.process.ActionProcessMapper;
+import de.cybine.factory.data.poi.PointOfInterestMapper;
+import de.cybine.factory.data.sensor.SensorMapper;
 import de.cybine.factory.util.api.converter.*;
 import de.cybine.factory.util.cloudevent.CloudEventConverter;
 import de.cybine.factory.util.converter.ConverterRegistry;
@@ -41,5 +43,8 @@ public class ConverterConfig
         this.registry.addEntityMapper(new ActionMetadataMapper());
         this.registry.addEntityMapper(new ActionProcessMapper());
         this.registry.addConverter(new CloudEventConverter(this.applicationConfig));
+
+        this.registry.addEntityMapper(new PointOfInterestMapper());
+        this.registry.addEntityMapper(new SensorMapper());
     }
 }

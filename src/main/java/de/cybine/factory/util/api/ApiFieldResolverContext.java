@@ -1,6 +1,8 @@
 package de.cybine.factory.util.api;
 
 import de.cybine.factory.util.BiTuple;
+import de.cybine.factory.util.api.permission.ApiCapability;
+import de.cybine.factory.util.api.permission.ApiTypeConfig;
 import de.cybine.factory.util.datasource.DatasourceField;
 import de.cybine.factory.util.datasource.DatasourceFieldPath;
 import lombok.AccessLevel;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -24,6 +28,12 @@ public class ApiFieldResolverContext
 
     @Getter(AccessLevel.NONE)
     private final Function<BiTuple<Type, String>, DatasourceField> fieldSupplier;
+
+    private final List<String>        availableActions;
+    private final List<ApiCapability> capabilities;
+    private final List<ApiTypeConfig> types;
+
+    private final Map<String, Type> typeMappings;
 
     public Optional<DatasourceFieldPath> findField(Type responseType, String fieldName)
     {

@@ -8,8 +8,8 @@ import de.cybine.factory.data.action.context.ActionContextMetadata;
 import de.cybine.factory.data.action.process.ActionProcess;
 import de.cybine.factory.data.action.process.ActionProcessMetadata;
 import de.cybine.factory.exception.action.ActionProcessingException;
-import de.cybine.factory.service.action.ActionData;
-import de.cybine.factory.service.action.ActionDataTypeRegistry;
+import de.cybine.factory.service.action.data.ActionData;
+import de.cybine.factory.service.action.data.ActionDataTypeRegistry;
 import de.cybine.factory.service.action.ActionService;
 import de.cybine.factory.service.action.ContextService;
 import de.cybine.factory.util.api.response.ApiResponse;
@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -100,6 +101,15 @@ public class HandleResource implements HandleApi
 
         return ApiResponse.<ActionProcess>builder()
                           .value(this.actionService.fetchCurrentState(context.getId()).orElseThrow())
+                          .build()
+                          .toResponse();
+    }
+
+    @Override
+    public RestResponse<ApiResponse<List<String>>> fetchAvailableActions(UUID correlationId)
+    {
+        return ApiResponse.<List<String>>builder()
+                          .value(this.actionService.fetchAvailableActions(correlationId))
                           .build()
                           .toResponse();
     }

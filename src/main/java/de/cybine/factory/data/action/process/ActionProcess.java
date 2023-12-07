@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.context.ActionContextId;
 import de.cybine.factory.data.util.UUIDv7;
-import de.cybine.factory.service.action.ActionData;
+import de.cybine.factory.service.action.data.ActionData;
 import de.cybine.factory.util.Views;
 import de.cybine.factory.util.WithId;
 import lombok.AccessLevel;

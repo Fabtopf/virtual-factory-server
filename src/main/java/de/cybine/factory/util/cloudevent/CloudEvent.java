@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import de.cybine.factory.service.action.data.ActionData;
+import de.cybine.factory.service.action.data.ActionDataDeserializer;
+import de.cybine.factory.service.action.data.ActionDataSerializer;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -52,9 +55,9 @@ public class CloudEvent
 
     @Valid
     @JsonProperty(value = "data")
-    @JsonSerialize(converter = CloudEventDataSerializer.class)
-    @JsonDeserialize(converter = CloudEventDataDeserializer.class)
-    private final CloudEventData<?> data;
+    @JsonSerialize(converter = ActionDataSerializer.class)
+    @JsonDeserialize(converter = ActionDataDeserializer.class)
+    private final ActionData<?> data;
 
     public Optional<String> getSubject( )
     {
@@ -78,8 +81,8 @@ public class CloudEvent
 
     @JsonIgnore
     @SuppressWarnings("unchecked")
-    public <T> Optional<CloudEventData<T>> getData( )
+    public <T> Optional<ActionData<T>> getData( )
     {
-        return Optional.ofNullable((CloudEventData<T>) this.data);
+        return Optional.ofNullable((ActionData<T>) this.data);
     }
 }

@@ -1,5 +1,6 @@
 package de.cybine.factory.service.action;
 
+import de.cybine.factory.data.action.context.ActionContextEntity_;
 import de.cybine.factory.data.action.metadata.ActionMetadata;
 import de.cybine.factory.data.action.metadata.ActionMetadataEntity;
 import de.cybine.factory.data.action.metadata.ActionMetadataId;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static de.cybine.factory.data.action.metadata.ActionMetadataEntity_.*;
 
@@ -48,6 +50,20 @@ public class MetadataService
         DatasourceConditionInfo condition = DatasourceHelper.and(idEquals);
 
         return this.service.fetchSingle(DatasourceQuery.builder().condition(condition).build());
+    }
+
+    public Optional<ActionMetadata> fetchByCorrelationId(UUID correlationId)
+    {
+        DatasourceConditionDetail<String> correlationIdEquals = DatasourceHelper.isEqual(
+                ActionContextEntity_.CORRELATION_ID, correlationId.toString());
+
+        DatasourceConditionInfo condition = DatasourceHelper.and(correlationIdEquals);
+        DatasourceRelationInfo contextRelation = DatasourceRelationInfo.builder()
+                                                                       .property(CONTEXTS.getName())
+                                                                       .condition(condition)
+                                                                       .build();
+
+        return this.service.fetchSingle(DatasourceQuery.builder().relation(contextRelation).build());
     }
 
     public List<ActionMetadata> fetch(ApiQuery query)
