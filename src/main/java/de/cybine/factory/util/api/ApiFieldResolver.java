@@ -1,7 +1,10 @@
 package de.cybine.factory.util.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.cybine.factory.config.ApplicationConfig;
 import de.cybine.factory.util.BiTuple;
+import de.cybine.factory.util.FilePathHelper;
 import de.cybine.factory.util.api.permission.ApiContextConfig;
 import de.cybine.factory.util.api.permission.ApiContextMapping;
 import de.cybine.factory.util.api.permission.ApiPermission;
@@ -11,10 +14,10 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +30,9 @@ public class ApiFieldResolver
 {
     public static final String DEFAULT_CONTEXT = "default";
 
-    private final ObjectMapper     objectMapper;
-    private final SecurityIdentity securityIdentity;
+    private final ObjectMapper      objectMapper;
+    private final SecurityIdentity  securityIdentity;
+    private final ApplicationConfig applicationConfig;
 
     private final Map<String, ApiFieldResolverContext> contexts = new HashMap<>();
 
@@ -39,15 +43,18 @@ public class ApiFieldResolver
     private ApiPermissionConfig permissionConfig;
 
     @PostConstruct
-    @SneakyThrows
-    void setup( )
+    void setup( ) throws URISyntaxException, JsonProcessingException
     {
-        this.permissionConfig = this.objectMapper.readValue(
-                this.getClass().getClassLoader().getResource("api-permissions.json"), ApiPermissionConfig.class);
+        String permissionJson = FilePathHelper.resolvePath(this.applicationConfig.paths().apiPermissionsPath())
+                                              .flatMap(FilePathHelper::tryRead)
+                                              .orElse(null);
+
+        if (permissionJson != null)
+            this.permissionConfig = this.objectMapper.readValue(permissionJson, ApiPermissionConfig.class);
 
         this.contexts.clear();
         for (ApiContextConfig context : this.permissionConfig.getContexts())
-            System.out.println("ctx: " + this.getContext(context.getName()).getContextName());
+            log.debug("Registering api-context {}", this.getContext(context.getName()).getContextName());
     }
 
     public ApiFieldResolverContext getUserContext( )

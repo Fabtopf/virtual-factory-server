@@ -2,7 +2,9 @@ package de.cybine.factory.util.api.permission;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.cybine.factory.config.ApplicationConfig;
 import de.cybine.factory.exception.TechnicalException;
+import de.cybine.factory.util.FilePathHelper;
 import io.quarkus.arc.Arc;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.smallrye.mutiny.Uni;
@@ -12,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.security.Permission;
 import java.util.HashMap;
@@ -24,25 +25,15 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RBACResolver
 {
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper      objectMapper;
+    private final ApplicationConfig applicationConfig;
 
     private final Map<String, RBACRole> roles = new HashMap<>();
 
     @PostConstruct
-    void setup( )
+    void setup( ) throws URISyntaxException
     {
-        try
-        {
-            URL rbacResource = this.getClass().getClassLoader().getResource("rbac.json");
-            if (rbacResource == null)
-                return;
-
-            this.reload(Path.of(rbacResource.toURI()));
-        }
-        catch (URISyntaxException exception)
-        {
-            throw new TechnicalException("Could not load rbac-data", exception);
-        }
+        FilePathHelper.resolvePath(this.applicationConfig.paths().rbacPath()).ifPresent(this::reload);
     }
 
     public void reload(Path path)
