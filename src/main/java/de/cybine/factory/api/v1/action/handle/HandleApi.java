@@ -12,7 +12,6 @@ import org.jboss.resteasy.reactive.RestResponse;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Path("/api/v1/action/handle")
 @Tag(name = "ActionHandle Resource")
@@ -35,7 +34,7 @@ public interface HandleApi
     @Parameter(name = "correlation-id",
                required = true,
                description = "Correlation-ID of the action-context to terminate")
-    RestResponse<ApiResponse<Void>> terminate(@QueryParam("correlation-id") @NotNull UUID correlationId);
+    RestResponse<ApiResponse<Void>> terminate(@QueryParam("correlation-id") @NotNull String correlationId);
 
     @POST
     @Path("/process")
@@ -48,8 +47,8 @@ public interface HandleApi
                                "information")
     @Parameter(name = "action", required = true, description = "Action to perform (next-state of the context)")
     @Parameter(name = "data", description = "Data to add to the process")
-    RestResponse<ApiResponse<ActionProcess>> process(@QueryParam("correlation-id") @NotNull UUID correlationId,
-            @QueryParam("event-id") UUID eventId, @QueryParam("action") @NotNull String action,
+    RestResponse<ApiResponse<ActionProcess>> process(@QueryParam("correlation-id") @NotNull String correlationId,
+            @QueryParam("event-id") String eventId, @QueryParam("action") @NotNull String action,
             Map<String, Object> data);
 
     @GET
@@ -58,5 +57,5 @@ public interface HandleApi
                required = true,
                description = "Correlation-ID of the action-context to process")
     RestResponse<ApiResponse<List<String>>> fetchAvailableActions(
-            @PathParam("correlation-id") @NotNull UUID correlationId);
+            @PathParam("correlation-id") @NotNull String correlationId);
 }

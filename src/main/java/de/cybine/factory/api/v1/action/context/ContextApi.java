@@ -25,11 +25,11 @@ public interface ContextApi
 {
     @GET
     @Path("/find/id/{id}")
-    RestResponse<ApiResponse<ActionContext>> fetchById(@PathParam("id") @Min(1) long id);
+    RestResponse<ApiResponse<ActionContext>> fetchById(@PathParam("id") UUID id);
 
     @GET
     @Path("/find/correlation-id/{correlation-id}")
-    RestResponse<ApiResponse<ActionContext>> fetchByCorrelationId(@PathParam("correlation-id") UUID correlationId);
+    RestResponse<ApiResponse<ActionContext>> fetchByCorrelationId(@PathParam("correlation-id") String correlationId);
 
     @POST
     RestResponse<ApiResponse<List<ActionContext>>> fetch(@Valid @NotNull ApiQuery query);

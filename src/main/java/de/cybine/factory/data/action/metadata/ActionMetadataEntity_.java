@@ -7,6 +7,8 @@ import jakarta.persistence.metamodel.SingularAttribute;
 import jakarta.persistence.metamodel.StaticMetamodel;
 import lombok.experimental.UtilityClass;
 
+import java.util.UUID;
+
 @UtilityClass
 @StaticMetamodel(ActionMetadataEntity.class)
 public class ActionMetadataEntity_
@@ -22,7 +24,7 @@ public class ActionMetadataEntity_
 
     // @formatter:off
     public static final DatasourceField ID        =
-            DatasourceField.property(ActionMetadataEntity.class, "id", Long.class);
+            DatasourceField.property(ActionMetadataEntity.class, "id", UUID.class);
     public static final DatasourceField NAMESPACE =
             DatasourceField.property(ActionMetadataEntity.class, "namespace", String.class);
     public static final DatasourceField CATEGORY =
@@ -35,7 +37,7 @@ public class ActionMetadataEntity_
             DatasourceField.property(ActionMetadataEntity.class, "contexts", ActionContextEntity.class);
     // @formatter:on
 
-    public static volatile SingularAttribute<ActionMetadataEntity, Long>           id;
+    public static volatile SingularAttribute<ActionMetadataEntity, UUID>           id;
     public static volatile SingularAttribute<ActionMetadataEntity, String>         namespace;
     public static volatile SingularAttribute<ActionMetadataEntity, String>         category;
     public static volatile SingularAttribute<ActionMetadataEntity, String>         name;

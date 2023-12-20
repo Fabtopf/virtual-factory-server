@@ -22,7 +22,7 @@ public class ContextResource implements ContextApi
     private final ContextService service;
 
     @Override
-    public RestResponse<ApiResponse<ActionContext>> fetchById(long id)
+    public RestResponse<ApiResponse<ActionContext>> fetchById(UUID id)
     {
         return ApiResponse.<ActionContext>builder()
                           .value(this.service.fetchById(ActionContextId.of(id)).orElseThrow())
@@ -31,7 +31,7 @@ public class ContextResource implements ContextApi
     }
 
     @Override
-    public RestResponse<ApiResponse<ActionContext>> fetchByCorrelationId(UUID correlationId)
+    public RestResponse<ApiResponse<ActionContext>> fetchByCorrelationId(String correlationId)
     {
         return ApiResponse.<ActionContext>builder()
                           .value(this.service.fetchByCorrelationId(correlationId).orElseThrow())

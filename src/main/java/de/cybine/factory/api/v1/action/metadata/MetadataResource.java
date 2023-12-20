@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class MetadataResource implements MetadataApi
     private final MetadataService service;
 
     @Override
-    public RestResponse<ApiResponse<ActionMetadata>> fetchById(long id)
+    public RestResponse<ApiResponse<ActionMetadata>> fetchById(UUID id)
     {
         return ApiResponse.<ActionMetadata>builder()
                           .value(this.service.fetchById(ActionMetadataId.of(id)).orElseThrow())

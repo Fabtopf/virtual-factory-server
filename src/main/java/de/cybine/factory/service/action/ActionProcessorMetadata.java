@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Optional;
+
 @Data
 @Builder(builderClassName = "Generator")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -16,6 +18,11 @@ public class ActionProcessorMetadata
 
     private final String fromStatus;
     private final String toStatus;
+
+    public Optional<String> getFromStatus( )
+    {
+        return Optional.ofNullable(this.fromStatus);
+    }
 
     public String asString( )
     {

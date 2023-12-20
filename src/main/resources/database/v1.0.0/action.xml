@@ -7,7 +7,7 @@
     <changeSet id="v1.0.0-action-setup" author="f.boelter">
         <sql>CREATE TYPE action_type AS ENUM('update', 'action', 'log')</sql>
         <createTable tableName="action_metadata">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="namespace" type="VARCHAR(255)">
@@ -24,10 +24,10 @@
             </column>
         </createTable>
         <createTable tableName="action_context">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="metadata_id" type="BIGINT">
+            <column name="metadata_id" type="UUID">
                 <constraints nullable="false" references="action_metadata(id)"
                              foreignKeyName="action_metadata_fk-metadata_id" deleteCascade="true"/>
             </column>
@@ -37,13 +37,13 @@
             <column name="item_id" type="VARCHAR(255)"/>
         </createTable>
         <createTable tableName="action_process">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="event_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="context_id" type="BIGINT">
+            <column name="context_id" type="UUID">
                 <constraints nullable="false" references="action_context(id)"
                              foreignKeyName="action_process_fk-context_id" deleteCascade="true"/>
             </column>

@@ -8,10 +8,10 @@ import de.cybine.factory.data.action.context.ActionContextMetadata;
 import de.cybine.factory.data.action.process.ActionProcess;
 import de.cybine.factory.data.action.process.ActionProcessMetadata;
 import de.cybine.factory.exception.action.ActionProcessingException;
-import de.cybine.factory.service.action.data.ActionData;
-import de.cybine.factory.service.action.data.ActionDataTypeRegistry;
 import de.cybine.factory.service.action.ActionService;
 import de.cybine.factory.service.action.ContextService;
+import de.cybine.factory.service.action.data.ActionData;
+import de.cybine.factory.service.action.data.ActionDataTypeRegistry;
 import de.cybine.factory.util.api.response.ApiResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -53,7 +52,7 @@ public class HandleResource implements HandleApi
     }
 
     @Override
-    public RestResponse<ApiResponse<Void>> terminate(UUID correlationId)
+    public RestResponse<ApiResponse<Void>> terminate(String correlationId)
     {
         ActionContext context = this.contextService.fetchByCorrelationId(correlationId).orElseThrow();
         this.actionService.terminateContext(context.getId());
@@ -62,12 +61,12 @@ public class HandleResource implements HandleApi
     }
 
     @Override
-    public RestResponse<ApiResponse<ActionProcess>> process(UUID correlationId, UUID eventId, String action,
+    public RestResponse<ApiResponse<ActionProcess>> process(String correlationId, String eventId, String action,
             Map<String, Object> data)
     {
         ActionContext context = this.contextService.fetchByCorrelationId(correlationId).orElseThrow();
         ActionProcess currentState = this.actionService.fetchCurrentState(context.getId()).orElseThrow();
-        if (eventId != null && !Objects.equals(currentState.getEventId(), eventId.toString()))
+        if (eventId != null && !Objects.equals(currentState.getEventId(), eventId))
             return ApiResponse.<ActionProcess>builder().status(RestResponse.Status.CONFLICT).build().toResponse();
 
         ActionData<?> actionData = null;
@@ -106,7 +105,7 @@ public class HandleResource implements HandleApi
     }
 
     @Override
-    public RestResponse<ApiResponse<List<String>>> fetchAvailableActions(UUID correlationId)
+    public RestResponse<ApiResponse<List<String>>> fetchAvailableActions(String correlationId)
     {
         return ApiResponse.<List<String>>builder()
                           .value(this.actionService.fetchAvailableActions(correlationId))

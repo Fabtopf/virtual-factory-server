@@ -2,6 +2,7 @@ package de.cybine.factory.data.action.metadata;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.context.ActionContextId;
 import de.cybine.factory.util.Views;
@@ -29,6 +30,7 @@ public class ActionMetadata implements Serializable, WithId<ActionMetadataId>
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("id")
+    @JsonDeserialize(using = ActionMetadataId.Deserializer.class)
     private final ActionMetadataId id;
 
     @JsonProperty("namespace")

@@ -2,6 +2,7 @@ package de.cybine.factory.data.action.process;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.context.ActionContextId;
 import de.cybine.factory.data.util.UUIDv7;
@@ -30,6 +31,7 @@ public class ActionProcess implements Serializable, WithId<ActionProcessId>
     private static final long serialVersionUID = 1L;
 
     @JsonProperty("id")
+    @JsonDeserialize(using = ActionProcessId.Deserializer.class)
     private final ActionProcessId id;
 
     @Builder.Default

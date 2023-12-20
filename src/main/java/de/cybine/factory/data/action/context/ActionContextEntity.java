@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -19,18 +20,17 @@ import java.util.Set;
 @Table(name = ActionContextEntity_.TABLE)
 @Entity(name = ActionContextEntity_.ENTITY)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ActionContextEntity implements Serializable, WithId<Long>
+public class ActionContextEntity implements Serializable, WithId<UUID>
 {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ActionContextEntity_.ID_COLUMN, nullable = false, unique = true)
-    private Long id;
+    private UUID id;
 
     @Column(name = ActionContextEntity_.METADATA_ID_COLUMN, nullable = false, insertable = false, updatable = false)
-    private Long metadataId;
+    private UUID metadataId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = ActionContextEntity_.METADATA_ID_COLUMN, nullable = false)
