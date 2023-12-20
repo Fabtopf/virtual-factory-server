@@ -11,12 +11,13 @@ import de.cybine.factory.util.datasource.DatasourceConditionInfo;
 import de.cybine.factory.util.datasource.DatasourceFieldPath;
 import de.cybine.factory.util.datasource.DatasourceOrderInfo;
 import de.cybine.factory.util.datasource.DatasourceRelationInfo;
-import io.quarkus.arc.Arc;
+import lombok.RequiredArgsConstructor;
 
-import java.util.Collections;
-
+@RequiredArgsConstructor
 public class ApiRelationInfoConverter implements Converter<ApiRelationInfo, DatasourceRelationInfo>
 {
+    private final ApplicationConfig config;
+
     @Override
     public Class<ApiRelationInfo> getInputType( )
     {
@@ -57,6 +58,6 @@ public class ApiRelationInfoConverter implements Converter<ApiRelationInfo, Data
 
     private boolean allowMultiLevelRelations()
     {
-        return Arc.container().select(ApplicationConfig.class).get().converter().allowMultiLevelRelations();
+        return this.config.converter().allowMultiLevelRelations();
     }
 }
