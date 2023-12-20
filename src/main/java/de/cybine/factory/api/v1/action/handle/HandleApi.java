@@ -3,6 +3,7 @@ package de.cybine.factory.api.v1.action.handle;
 import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.process.ActionProcess;
 import de.cybine.factory.util.api.response.ApiResponse;
+import io.quarkus.security.Authenticated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -13,6 +14,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import java.util.List;
 import java.util.Map;
 
+@Authenticated
 @Path("/api/v1/action/handle")
 @Tag(name = "ActionHandle Resource")
 @Produces(MediaType.APPLICATION_JSON)

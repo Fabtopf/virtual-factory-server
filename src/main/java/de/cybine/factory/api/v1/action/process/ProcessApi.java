@@ -7,6 +7,7 @@ import de.cybine.factory.util.api.query.ApiOptionQuery;
 import de.cybine.factory.util.api.query.ApiQuery;
 import de.cybine.factory.util.api.response.ApiResponse;
 import de.cybine.factory.util.cloudevent.CloudEvent;
+import io.quarkus.security.Authenticated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
@@ -17,6 +18,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import java.util.List;
 import java.util.UUID;
 
+@Authenticated
 @Path("/api/v1/action/process")
 @Tag(name = "ActionProcess Resource")
 @Produces(MediaType.APPLICATION_JSON)

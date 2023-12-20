@@ -8,12 +8,14 @@ import de.cybine.factory.util.api.query.ApiCountQuery;
 import de.cybine.factory.util.api.query.ApiOptionQuery;
 import de.cybine.factory.util.api.query.ApiQuery;
 import de.cybine.factory.util.api.response.ApiResponse;
+import io.quarkus.security.Authenticated;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import java.util.List;
 
+@Authenticated
 @ApplicationScoped
 @RequiredArgsConstructor
 public class SensorResource implements SensorApi

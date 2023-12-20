@@ -6,8 +6,8 @@ import de.cybine.factory.util.api.query.ApiCountQuery;
 import de.cybine.factory.util.api.query.ApiOptionQuery;
 import de.cybine.factory.util.api.query.ApiQuery;
 import de.cybine.factory.util.api.response.ApiResponse;
+import io.quarkus.security.Authenticated;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -17,6 +17,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import java.util.List;
 import java.util.UUID;
 
+@Authenticated
 @Path("/api/v1/action/context")
 @Tag(name = "ActionContext Resource")
 @Produces(MediaType.APPLICATION_JSON)

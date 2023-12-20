@@ -13,6 +13,7 @@ import de.cybine.factory.service.action.ContextService;
 import de.cybine.factory.service.action.data.ActionData;
 import de.cybine.factory.service.action.data.ActionDataTypeRegistry;
 import de.cybine.factory.util.api.response.ApiResponse;
+import io.quarkus.security.Authenticated;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Authenticated
 @ApplicationScoped
 @RequiredArgsConstructor
 public class HandleResource implements HandleApi
