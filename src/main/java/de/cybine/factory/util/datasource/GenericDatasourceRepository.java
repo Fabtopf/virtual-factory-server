@@ -26,6 +26,16 @@ public class GenericDatasourceRepository<T>
         return DatasourceQueryInterpreter.of(this.type, query).<O>prepareOptionQuery().getResultList();
     }
 
+    @SuppressWarnings("unchecked")
+    public List<List<Object>> fetchMultiOptions(DatasourceQuery query)
+    {
+        return DatasourceQueryInterpreter.of(this.type, query)
+                                         .prepareMultiOptionQuery()
+                                         .getResultStream()
+                                         .map(item -> (List<Object>) item)
+                                         .toList();
+    }
+
     public List<DatasourceCountInfo> fetchTotal(DatasourceQuery query)
     {
         return DatasourceQueryInterpreter.of(this.type, query).executeCountQuery();
