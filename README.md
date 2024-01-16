@@ -1,8 +1,6 @@
 # virtual-factory-server
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
-
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+Third-party server-app to capture, forward and replay events of smart-sensors.
 
 ## Running the application in dev mode
 
