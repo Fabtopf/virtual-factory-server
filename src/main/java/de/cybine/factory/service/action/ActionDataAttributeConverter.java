@@ -1,7 +1,6 @@
-package de.cybine.factory.service.action.data;
+package de.cybine.factory.service.action;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.quarkus.arc.Arc;
+import de.cybine.quarkus.util.action.data.*;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +21,9 @@ public class ActionDataAttributeConverter implements AttributeConverter<ActionDa
     @Override
     public ActionData<?> convertToEntityAttribute(String dbData)
     {
-        if(dbData == null)
+        if (dbData == null)
             return null;
 
         return ActionData.fromJson(dbData);
-    }
-
-    private ObjectMapper getObjectMapper( )
-    {
-        return Arc.container().select(ObjectMapper.class).get();
     }
 }

@@ -1,7 +1,7 @@
 package de.cybine.factory.config;
 
-import de.cybine.factory.util.api.permission.PermissionChecker;
-import de.cybine.factory.util.api.permission.RBACResolver;
+import de.cybine.quarkus.util.api.permission.PermissionChecker;
+import de.cybine.quarkus.util.api.permission.RBACResolver;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.quarkus.oidc.runtime.OidcAuthenticationMechanism;
 import io.quarkus.security.identity.AuthenticationRequestContext;

@@ -1,6 +1,6 @@
 package de.cybine.factory.data.sensor;
 
-import de.cybine.factory.util.WithId;
+import de.cybine.quarkus.util.WithId;
 import jakarta.persistence.*;
 import lombok.*;
 

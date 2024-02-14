@@ -1,7 +1,7 @@
 package de.cybine.factory.data.action.process;
 
 import de.cybine.factory.data.action.context.ActionContextEntity;
-import de.cybine.factory.util.datasource.DatasourceField;
+import de.cybine.quarkus.util.datasource.DatasourceField;
 import jakarta.persistence.metamodel.SingularAttribute;
 import jakarta.persistence.metamodel.StaticMetamodel;
 import lombok.experimental.UtilityClass;

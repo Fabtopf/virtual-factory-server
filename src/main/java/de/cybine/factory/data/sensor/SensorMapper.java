@@ -1,8 +1,8 @@
 package de.cybine.factory.data.sensor;
 
-import de.cybine.factory.data.util.primitive.Id;
-import de.cybine.factory.util.converter.ConversionHelper;
-import de.cybine.factory.util.converter.EntityMapper;
+import de.cybine.quarkus.data.util.primitive.Id;
+import de.cybine.quarkus.util.converter.ConversionHelper;
+import de.cybine.quarkus.util.converter.EntityMapper;
 
 public class SensorMapper implements EntityMapper<SensorEntity, Sensor>
 {

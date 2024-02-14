@@ -1,15 +1,11 @@
 package de.cybine.factory.data.action.context;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import de.cybine.factory.data.action.metadata.ActionMetadata;
-import de.cybine.factory.data.action.metadata.ActionMetadataId;
 import de.cybine.factory.data.action.process.ActionProcess;
 import de.cybine.factory.data.action.process.ActionProcessId;
-import de.cybine.factory.data.util.UUIDv7;
-import de.cybine.factory.util.Views;
-import de.cybine.factory.util.WithId;
+import de.cybine.quarkus.data.util.UUIDv7;
+import de.cybine.quarkus.util.WithId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,13 +32,14 @@ public class ActionContext implements Serializable, WithId<ActionContextId>
     @JsonDeserialize(using = ActionContextId.Deserializer.class)
     private final ActionContextId id;
 
-    @JsonProperty("metadata_id")
-    @JsonView(Views.Simple.class)
-    private final ActionMetadataId metadataId;
+    @JsonProperty("namespace")
+    private final String namespace;
 
-    @JsonProperty("metadata")
-    @JsonView(Views.Extended.class)
-    private final ActionMetadata metadata;
+    @JsonProperty("category")
+    private final String category;
+
+    @JsonProperty("name")
+    private final String name;
 
     @Builder.Default
     @JsonProperty("correlation_id")
@@ -52,13 +49,7 @@ public class ActionContext implements Serializable, WithId<ActionContextId>
     private final String itemId;
 
     @JsonProperty("processes")
-    @JsonView(Views.Extended.class)
     private final Set<ActionProcess> processes;
-
-    public Optional<ActionMetadata> getMetadata( )
-    {
-        return Optional.ofNullable(this.metadata);
-    }
 
     public Optional<String> getItemId( )
     {
@@ -71,7 +62,6 @@ public class ActionContext implements Serializable, WithId<ActionContextId>
     }
 
     @JsonProperty("process_ids")
-    @JsonView(Views.Simple.class)
     private Optional<Set<ActionProcessId>> getProcessIds( )
     {
         return this.getProcesses().map(items -> items.stream().map(WithId::getId).collect(Collectors.toSet()));

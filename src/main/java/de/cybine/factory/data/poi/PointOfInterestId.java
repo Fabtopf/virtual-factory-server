@@ -1,7 +1,7 @@
 package de.cybine.factory.data.poi;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import de.cybine.factory.data.util.primitive.Id;
+import de.cybine.quarkus.data.util.primitive.Id;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;

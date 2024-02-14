@@ -3,15 +3,20 @@ package de.cybine.factory.service.action;
 import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.context.ActionContextEntity;
 import de.cybine.factory.data.action.context.ActionContextId;
-import de.cybine.factory.util.api.ApiFieldResolver;
-import de.cybine.factory.util.api.query.ApiCountInfo;
-import de.cybine.factory.util.api.query.ApiCountQuery;
-import de.cybine.factory.util.api.query.ApiOptionQuery;
-import de.cybine.factory.util.api.query.ApiQuery;
-import de.cybine.factory.util.datasource.*;
+import de.cybine.factory.data.action.process.ActionProcess;
+import de.cybine.quarkus.util.api.ApiFieldResolver;
+import de.cybine.quarkus.util.api.GenericApiQueryService;
+import de.cybine.quarkus.util.api.query.ApiCountInfo;
+import de.cybine.quarkus.util.api.query.ApiCountQuery;
+import de.cybine.quarkus.util.api.query.ApiOptionQuery;
+import de.cybine.quarkus.util.api.query.ApiQuery;
+import de.cybine.quarkus.util.datasource.DatasourceConditionDetail;
+import de.cybine.quarkus.util.datasource.DatasourceConditionInfo;
+import de.cybine.quarkus.util.datasource.DatasourceHelper;
+import de.cybine.quarkus.util.datasource.DatasourceQuery;
 import io.quarkus.runtime.Startup;
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -21,12 +26,11 @@ import java.util.UUID;
 import static de.cybine.factory.data.action.context.ActionContextEntity_.*;
 
 @Startup
-@ApplicationScoped
+@Singleton
 @RequiredArgsConstructor
 public class ContextService
 {
-    private final GenericDatasourceService<ActionContextEntity, ActionContext> service =
-            GenericDatasourceService.forType(
+    private final GenericApiQueryService<ActionContextEntity, ActionContext> service = GenericApiQueryService.forType(
             ActionContextEntity.class, ActionContext.class);
 
     private final ApiFieldResolver resolver;
@@ -34,13 +38,14 @@ public class ContextService
     @PostConstruct
     void setup( )
     {
-        this.resolver.registerTypeRepresentation(ActionContext.class, ActionContextEntity.class)
-                     .registerField("id", ID)
-                     .registerField("metadata_id", METADATA_ID)
-                     .registerField("metadata", METADATA)
-                     .registerField("correlation_id", CORRELATION_ID)
-                     .registerField("item_id", ITEM_ID)
-                     .registerField("processes", PROCESSES);
+        this.resolver.registerType(ActionContext.class)
+                     .withField("id", ID)
+                     .withField("namespace", NAMESPACE)
+                     .withField("category", CATEGORY)
+                     .withField("name", NAME)
+                     .withField("correlation_id", CORRELATION_ID)
+                     .withField("item_id", ITEM_ID)
+                     .withRelation("processes", PROCESSES, ActionProcess.class);
     }
 
     public Optional<ActionContext> fetchById(ActionContextId id)

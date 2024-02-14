@@ -1,8 +1,7 @@
 package de.cybine.factory.api.v1.action.handle;
 
-import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.process.ActionProcess;
-import de.cybine.factory.util.api.response.ApiResponse;
+import de.cybine.quarkus.util.api.response.ApiResponse;
 import io.quarkus.security.Authenticated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
@@ -27,7 +26,7 @@ public interface HandleApi
     @Parameter(name = "category", required = true, description = "Category of the action-context")
     @Parameter(name = "name", required = true, description = "Name of the action-context")
     @Parameter(name = "item-id", description = "ID of the item to apply the action to")
-    RestResponse<ApiResponse<ActionContext>> create(@PathParam("namespace") String namespace,
+    RestResponse<ApiResponse<String>> create(@PathParam("namespace") String namespace,
             @PathParam("category") String category, @PathParam("name") String name,
             @QueryParam("item-id") String itemId);
 
@@ -36,7 +35,7 @@ public interface HandleApi
     @Parameter(name = "correlation-id",
                required = true,
                description = "Correlation-ID of the action-context to terminate")
-    RestResponse<ApiResponse<Void>> terminate(@QueryParam("correlation-id") @NotNull String correlationId);
+    RestResponse<ApiResponse<ActionProcess>> terminate(@QueryParam("correlation-id") @NotNull String correlationId);
 
     @POST
     @Path("/process")

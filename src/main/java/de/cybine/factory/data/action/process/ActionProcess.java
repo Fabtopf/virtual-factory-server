@@ -1,14 +1,12 @@
 package de.cybine.factory.data.action.process;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.context.ActionContextId;
-import de.cybine.factory.data.util.UUIDv7;
-import de.cybine.factory.service.action.data.ActionData;
-import de.cybine.factory.util.Views;
-import de.cybine.factory.util.WithId;
+import de.cybine.quarkus.data.util.UUIDv7;
+import de.cybine.quarkus.util.WithId;
+import de.cybine.quarkus.util.action.data.ActionData;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,11 +37,9 @@ public class ActionProcess implements Serializable, WithId<ActionProcessId>
     private final String eventId = UUIDv7.generate().toString();
 
     @JsonProperty("context_id")
-    @JsonView(Views.Simple.class)
     private final ActionContextId contextId;
 
     @JsonProperty("context")
-    @JsonView(Views.Extended.class)
     private final ActionContext context;
 
     @JsonProperty("status")

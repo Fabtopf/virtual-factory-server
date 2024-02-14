@@ -4,18 +4,19 @@ import de.cybine.factory.data.action.context.ActionContextEntity_;
 import de.cybine.factory.data.action.process.ActionProcess;
 import de.cybine.factory.data.action.process.ActionProcessEntity;
 import de.cybine.factory.data.action.process.ActionProcessId;
-import de.cybine.factory.util.api.ApiFieldResolver;
-import de.cybine.factory.util.api.query.ApiCountInfo;
-import de.cybine.factory.util.api.query.ApiCountQuery;
-import de.cybine.factory.util.api.query.ApiOptionQuery;
-import de.cybine.factory.util.api.query.ApiQuery;
-import de.cybine.factory.util.cloudevent.CloudEvent;
-import de.cybine.factory.util.converter.ConversionResult;
-import de.cybine.factory.util.converter.ConverterRegistry;
-import de.cybine.factory.util.datasource.*;
+import de.cybine.quarkus.util.api.ApiFieldResolver;
+import de.cybine.quarkus.util.api.GenericApiQueryService;
+import de.cybine.quarkus.util.api.query.ApiCountInfo;
+import de.cybine.quarkus.util.api.query.ApiCountQuery;
+import de.cybine.quarkus.util.api.query.ApiOptionQuery;
+import de.cybine.quarkus.util.api.query.ApiQuery;
+import de.cybine.quarkus.util.cloudevent.CloudEvent;
+import de.cybine.quarkus.util.converter.ConversionResult;
+import de.cybine.quarkus.util.converter.ConverterRegistry;
+import de.cybine.quarkus.util.datasource.*;
 import io.quarkus.runtime.Startup;
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -25,12 +26,11 @@ import java.util.UUID;
 import static de.cybine.factory.data.action.process.ActionProcessEntity_.*;
 
 @Startup
-@ApplicationScoped
+@Singleton
 @RequiredArgsConstructor
 public class ProcessService
 {
-    private final GenericDatasourceService<ActionProcessEntity, ActionProcess> service =
-            GenericDatasourceService.forType(
+    private final GenericApiQueryService<ActionProcessEntity, ActionProcess> service = GenericApiQueryService.forType(
             ActionProcessEntity.class, ActionProcess.class);
 
     private final ApiFieldResolver  resolver;
@@ -39,18 +39,18 @@ public class ProcessService
     @PostConstruct
     void setup( )
     {
-        this.resolver.registerTypeRepresentation(ActionProcess.class, ActionProcessEntity.class)
-                     .registerField("id", ID)
-                     .registerField("event_id", EVENT_ID)
-                     .registerField("context_id", CONTEXT_ID)
-                     .registerField("context", CONTEXT)
-                     .registerField("status", STATUS)
-                     .registerField("priority", PRIORITY)
-                     .registerField("description", DESCRIPTION)
-                     .registerField("creator_id", CREATOR_ID)
-                     .registerField("created_at", CREATED_AT)
-                     .registerField("due_at", DUE_AT)
-                     .registerField("data", DATA);
+        this.resolver.registerType(ActionProcess.class)
+                     .withField("id", ID)
+                     .withField("event_id", EVENT_ID)
+                     .withField("context_id", CONTEXT_ID)
+                     .withField("context", CONTEXT)
+                     .withField("status", STATUS)
+                     .withField("priority", PRIORITY)
+                     .withField("description", DESCRIPTION)
+                     .withField("creator_id", CREATOR_ID)
+                     .withField("created_at", CREATED_AT)
+                     .withField("due_at", DUE_AT)
+                     .withField("data", DATA);
     }
 
     public Optional<ActionProcess> fetchById(ActionProcessId id)
@@ -108,11 +108,9 @@ public class ProcessService
         DatasourceConditionDetail<String> idEquals = DatasourceHelper.isEqual(EVENT_ID, eventId);
         DatasourceConditionInfo condition = DatasourceHelper.and(idEquals);
 
-        DatasourceRelationInfo metadataRelation = DatasourceHelper.fetch(ActionContextEntity_.METADATA);
         DatasourceRelationInfo contextRelation = DatasourceRelationInfo.builder()
                                                                        .property(CONTEXT.getName())
                                                                        .fetch(true)
-                                                                       .relation(metadataRelation)
                                                                        .build();
 
         DatasourceQuery query = DatasourceQuery.builder().condition(condition).relation(contextRelation).build();
@@ -127,12 +125,10 @@ public class ProcessService
                 correlationId);
         DatasourceConditionInfo condition = DatasourceHelper.and(idEquals);
 
-        DatasourceRelationInfo metadataRelation = DatasourceHelper.fetch(ActionContextEntity_.METADATA);
         DatasourceRelationInfo contextRelation = DatasourceRelationInfo.builder()
                                                                        .property(CONTEXT.getName())
                                                                        .fetch(true)
                                                                        .condition(condition)
-                                                                       .relation(metadataRelation)
                                                                        .build();
 
         DatasourceQuery query = DatasourceQuery.builder().relation(contextRelation).build();

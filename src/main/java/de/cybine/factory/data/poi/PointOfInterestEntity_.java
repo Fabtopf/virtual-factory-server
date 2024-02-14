@@ -1,6 +1,6 @@
 package de.cybine.factory.data.poi;
 
-import de.cybine.factory.util.datasource.DatasourceField;
+import de.cybine.quarkus.util.datasource.DatasourceField;
 import jakarta.persistence.metamodel.SingularAttribute;
 import jakarta.persistence.metamodel.StaticMetamodel;
 import lombok.experimental.UtilityClass;

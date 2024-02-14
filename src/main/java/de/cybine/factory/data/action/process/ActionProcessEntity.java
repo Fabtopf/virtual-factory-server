@@ -1,9 +1,9 @@
 package de.cybine.factory.data.action.process;
 
 import de.cybine.factory.data.action.context.ActionContextEntity;
-import de.cybine.factory.service.action.data.ActionData;
-import de.cybine.factory.service.action.data.ActionDataAttributeConverter;
-import de.cybine.factory.util.WithId;
+import de.cybine.factory.service.action.ActionDataAttributeConverter;
+import de.cybine.quarkus.util.WithId;
+import de.cybine.quarkus.util.action.data.ActionData;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;

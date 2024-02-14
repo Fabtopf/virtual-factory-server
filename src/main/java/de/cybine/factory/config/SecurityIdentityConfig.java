@@ -1,7 +1,7 @@
 package de.cybine.factory.config;
 
 import de.cybine.factory.config.AuthenticationConfig.Mechanism;
-import de.cybine.factory.util.api.permission.PermissionChecker;
+import de.cybine.quarkus.util.api.permission.PermissionChecker;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.security.runtime.QuarkusSecurityIdentity;
 import jakarta.enterprise.context.Dependent;

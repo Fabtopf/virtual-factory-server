@@ -1,11 +1,11 @@
 package de.cybine.factory.api.v1.action.context;
 
 import de.cybine.factory.data.action.context.ActionContext;
-import de.cybine.factory.util.api.query.ApiCountInfo;
-import de.cybine.factory.util.api.query.ApiCountQuery;
-import de.cybine.factory.util.api.query.ApiOptionQuery;
-import de.cybine.factory.util.api.query.ApiQuery;
-import de.cybine.factory.util.api.response.ApiResponse;
+import de.cybine.quarkus.util.api.query.ApiCountInfo;
+import de.cybine.quarkus.util.api.query.ApiCountQuery;
+import de.cybine.quarkus.util.api.query.ApiOptionQuery;
+import de.cybine.quarkus.util.api.query.ApiQuery;
+import de.cybine.quarkus.util.api.response.ApiResponse;
 import io.quarkus.security.Authenticated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

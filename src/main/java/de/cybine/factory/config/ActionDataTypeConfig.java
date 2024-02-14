@@ -3,7 +3,7 @@ package de.cybine.factory.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import de.cybine.factory.service.sensor.SensorEventData;
-import de.cybine.factory.service.action.data.ActionDataTypeRegistry;
+import de.cybine.quarkus.util.action.data.ActionDataTypeRegistry;
 import io.quarkus.runtime.Startup;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.Dependent;

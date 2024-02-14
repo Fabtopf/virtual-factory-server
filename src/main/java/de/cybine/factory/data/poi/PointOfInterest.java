@@ -2,7 +2,7 @@ package de.cybine.factory.data.poi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.cybine.factory.data.util.PointLocation;
-import de.cybine.factory.util.WithId;
+import de.cybine.quarkus.util.WithId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

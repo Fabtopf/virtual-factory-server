@@ -17,13 +17,5 @@
             </column>
             <column name="description" type="TEXT"/>
         </createTable>
-
-        <insert tableName="action_metadata">
-            <column name="id">UUID()</column>
-            <column name="namespace">virtual-factory</column>
-            <column name="category">sensor</column>
-            <column name="name">event</column>
-            <column name="type">action</column>
-        </insert>
     </changeSet>
 </databaseChangeLog>

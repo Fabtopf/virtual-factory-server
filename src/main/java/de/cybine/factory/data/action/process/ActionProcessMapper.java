@@ -3,9 +3,9 @@ package de.cybine.factory.data.action.process;
 import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.context.ActionContextEntity;
 import de.cybine.factory.data.action.context.ActionContextId;
-import de.cybine.factory.data.util.primitive.Id;
-import de.cybine.factory.util.converter.ConversionHelper;
-import de.cybine.factory.util.converter.EntityMapper;
+import de.cybine.quarkus.data.util.primitive.Id;
+import de.cybine.quarkus.util.converter.ConversionHelper;
+import de.cybine.quarkus.util.converter.EntityMapper;
 
 public class ActionProcessMapper implements EntityMapper<ActionProcessEntity, ActionProcess>
 {

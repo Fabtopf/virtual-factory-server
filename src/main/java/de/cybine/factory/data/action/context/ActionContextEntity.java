@@ -1,9 +1,8 @@
 package de.cybine.factory.data.action.context;
 
-import de.cybine.factory.data.action.metadata.ActionMetadataEntity;
 import de.cybine.factory.data.action.process.ActionProcessEntity;
 import de.cybine.factory.data.action.process.ActionProcessEntity_;
-import de.cybine.factory.util.WithId;
+import de.cybine.quarkus.util.WithId;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,12 +28,14 @@ public class ActionContextEntity implements Serializable, WithId<UUID>
     @Column(name = ActionContextEntity_.ID_COLUMN, nullable = false, unique = true)
     private UUID id;
 
-    @Column(name = ActionContextEntity_.METADATA_ID_COLUMN, nullable = false, insertable = false, updatable = false)
-    private UUID metadataId;
+    @Column(name = ActionContextEntity_.NAMESPACE_COLUMN, nullable = false)
+    private String namespace;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = ActionContextEntity_.METADATA_ID_COLUMN, nullable = false)
-    private ActionMetadataEntity metadata;
+    @Column(name = ActionContextEntity_.CATEGORY_COLUMN, nullable = false)
+    private String category;
+
+    @Column(name = ActionContextEntity_.NAME_COLUMN, nullable = false)
+    private String name;
 
     @Column(name = ActionContextEntity_.CORRELATION_ID_COLUMN, nullable = false, unique = true)
     private String correlationId;
@@ -44,11 +45,6 @@ public class ActionContextEntity implements Serializable, WithId<UUID>
 
     @OneToMany(mappedBy = ActionProcessEntity_.CONTEXT_RELATION)
     private Set<ActionProcessEntity> processes;
-
-    public Optional<ActionMetadataEntity> getMetadata( )
-    {
-        return Optional.ofNullable(this.metadata);
-    }
 
     public Optional<String> getItemId( )
     {

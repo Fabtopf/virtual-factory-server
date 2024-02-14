@@ -6,7 +6,7 @@
 		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <changeSet id="v1.0.0-action-setup" author="f.boelter">
         <sql>CREATE TYPE action_type AS ENUM('update', 'action', 'log')</sql>
-        <createTable tableName="action_metadata">
+        <createTable tableName="action_context">
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
@@ -18,18 +18,6 @@
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
-            </column>
-            <column name="type" type="action_type">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <createTable tableName="action_context">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="metadata_id" type="UUID">
-                <constraints nullable="false" references="action_metadata(id)"
-                             foreignKeyName="action_metadata_fk-metadata_id" deleteCascade="true"/>
             </column>
             <column name="correlation_id" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -64,9 +52,6 @@
 
         <createIndex tableName="action_context" indexName="action_context-correlation_id" unique="true">
             <column name="correlation_id"/>
-        </createIndex>
-        <createIndex tableName="action_context" indexName="action_context-metadata">
-            <column name="metadata_id"/>
         </createIndex>
         <createIndex tableName="action_process" indexName="action_process-event_id" unique="true">
             <column name="event_id"/>

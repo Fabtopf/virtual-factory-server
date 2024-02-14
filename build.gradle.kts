@@ -6,12 +6,14 @@ plugins {
 
 repositories {
     mavenCentral()
-    mavenLocal()
+    maven(url = "https://repository.cybine.de/repository/maven-public/")
 }
 
 val quarkusPlatformGroupId: String by project
 val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
+
+val cybineQuarkusUtilsVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
@@ -36,6 +38,12 @@ dependencies {
     implementation("io.quarkus:quarkus-liquibase")
     implementation("io.quarkus:quarkus-agroal")
     implementation("io.quarkus:quarkus-arc")
+
+    implementation("de.cybine.quarkus:action-processor:${cybineQuarkusUtilsVersion}")
+    implementation("de.cybine.quarkus:api-query:${cybineQuarkusUtilsVersion}")
+    implementation("de.cybine.quarkus:common:${cybineQuarkusUtilsVersion}")
+    implementation("de.cybine.quarkus:datasource-query:${cybineQuarkusUtilsVersion}")
+    implementation("de.cybine.quarkus:type-converter:${cybineQuarkusUtilsVersion}")
 
     implementation("com.fasterxml.uuid:java-uuid-generator:4.1.0")
     implementation("org.mindrot:jbcrypt:0.4")
