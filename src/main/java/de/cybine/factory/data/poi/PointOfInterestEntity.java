@@ -20,9 +20,15 @@ public class PointOfInterestEntity implements Serializable, WithId<Long>
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name = PointOfInterestEntity_.ID_COLUMN)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = PointOfInterestEntity_.ID_COLUMN, nullable = false, unique = true)
     private Long id;
+
+    @Column(name = PointOfInterestEntity_.SERVER_ID_COLUMN, nullable = false)
+    private String serverId;
+
+    @Column(name = PointOfInterestEntity_.WORLD_COLUMN, nullable = false)
+    private String world;
 
     @Column(name = PointOfInterestEntity_.X_COLUMN, nullable = false)
     private Double xLocation;

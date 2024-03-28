@@ -3,11 +3,12 @@ package de.cybine.factory.api.v1.action.process;
 import de.cybine.factory.data.action.process.ActionProcess;
 import de.cybine.factory.data.action.process.ActionProcessId;
 import de.cybine.factory.service.action.ProcessService;
+import de.cybine.quarkus.api.response.ApiResponse;
+import de.cybine.quarkus.util.api.ApiQueryHelper;
 import de.cybine.quarkus.util.api.query.ApiCountInfo;
 import de.cybine.quarkus.util.api.query.ApiCountQuery;
 import de.cybine.quarkus.util.api.query.ApiOptionQuery;
 import de.cybine.quarkus.util.api.query.ApiQuery;
-import de.cybine.quarkus.util.api.response.ApiResponse;
 import de.cybine.quarkus.util.cloudevent.CloudEvent;
 import io.quarkus.security.Authenticated;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -30,7 +31,7 @@ public class ProcessResource implements ProcessApi
         return ApiResponse.<ActionProcess>builder()
                           .value(this.service.fetchById(ActionProcessId.of(id)).orElseThrow())
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class ProcessResource implements ProcessApi
         return ApiResponse.<ActionProcess>builder()
                           .value(this.service.fetchByEventId(eventId).orElseThrow())
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ProcessResource implements ProcessApi
         return ApiResponse.<List<ActionProcess>>builder()
                           .value(this.service.fetchByCorrelationId(correlationId))
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ProcessResource implements ProcessApi
         return ApiResponse.<CloudEvent>builder()
                           .value(this.service.fetchAsCloudEventByEventId(eventId).orElseThrow())
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
@@ -66,13 +67,16 @@ public class ProcessResource implements ProcessApi
         return ApiResponse.<List<CloudEvent>>builder()
                           .value(this.service.fetchAsCloudEventsByCorrelationId(correlationId))
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
     public RestResponse<ApiResponse<List<ActionProcess>>> fetch(ApiQuery query)
     {
-        return ApiResponse.<List<ActionProcess>>builder().value(this.service.fetch(query)).build().toResponse();
+        return ApiResponse.<List<ActionProcess>>builder()
+                          .value(this.service.fetch(query))
+                          .build()
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
@@ -81,18 +85,24 @@ public class ProcessResource implements ProcessApi
         return ApiResponse.<ActionProcess>builder()
                           .value(this.service.fetchSingle(query).orElseThrow())
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
     public RestResponse<ApiResponse<List<ApiCountInfo>>> fetchCount(ApiCountQuery query)
     {
-        return ApiResponse.<List<ApiCountInfo>>builder().value(this.service.fetchTotal(query)).build().toResponse();
+        return ApiResponse.<List<ApiCountInfo>>builder()
+                          .value(this.service.fetchTotal(query))
+                          .build()
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
     public RestResponse<ApiResponse<List<Object>>> fetchOptions(ApiOptionQuery query)
     {
-        return ApiResponse.<List<Object>>builder().value(this.service.fetchOptions(query)).build().toResponse();
+        return ApiResponse.<List<Object>>builder()
+                          .value(this.service.fetchOptions(query))
+                          .build()
+                          .transform(ApiQueryHelper::createResponse);
     }
 }

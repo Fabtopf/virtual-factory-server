@@ -25,6 +25,12 @@ public class PointOfInterest implements Serializable, WithId<PointOfInterestId>
     @JsonProperty("id")
     private final PointOfInterestId id;
 
+    @JsonProperty("server_id")
+    private final String serverId;
+
+    @JsonProperty("world")
+    private final String world;
+
     @JsonProperty("location")
     private final PointLocation location;
 

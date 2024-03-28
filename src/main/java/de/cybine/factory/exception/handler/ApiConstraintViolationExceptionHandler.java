@@ -2,7 +2,8 @@ package de.cybine.factory.exception.handler;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import de.cybine.quarkus.api.response.ApiError;
-import de.cybine.quarkus.util.api.response.ApiResponse;
+import de.cybine.quarkus.api.response.ApiResponse;
+import de.cybine.quarkus.util.api.ApiQueryHelper;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.Builder;
@@ -21,7 +22,7 @@ public class ApiConstraintViolationExceptionHandler
     {
         log.debug("A handled exception was thrown during api-request", exception);
         return ApiResponse.<ApiError>builder()
-                          .status(RestResponse.Status.BAD_REQUEST)
+                          .statusCode(RestResponse.Status.BAD_REQUEST.getStatusCode())
                           .error(ApiError.builder()
                                          .code("api-constraint-violation")
                                          .message("invalid request data provided")
@@ -31,7 +32,7 @@ public class ApiConstraintViolationExceptionHandler
                                                                       .toList())
                                          .build())
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     private Violation createViolation(ConstraintViolation<?> violation)

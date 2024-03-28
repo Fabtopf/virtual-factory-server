@@ -1,6 +1,5 @@
 package de.cybine.factory.service.action;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.context.ActionContextEntity;
 import de.cybine.factory.data.action.context.ActionContextEntity_;
@@ -13,7 +12,10 @@ import de.cybine.quarkus.exception.action.*;
 import de.cybine.quarkus.util.BiTuple;
 import de.cybine.quarkus.util.action.ActionHelper;
 import de.cybine.quarkus.util.action.ActionProcessor;
-import de.cybine.quarkus.util.action.data.*;
+import de.cybine.quarkus.util.action.data.Action;
+import de.cybine.quarkus.util.action.data.ActionMetadata;
+import de.cybine.quarkus.util.action.data.ActionProcessorMetadata;
+import de.cybine.quarkus.util.action.data.ActionResult;
 import de.cybine.quarkus.util.action.stateful.StatefulActionService;
 import de.cybine.quarkus.util.action.stateful.Workflow;
 import de.cybine.quarkus.util.converter.ConversionProcessor;
@@ -21,9 +23,9 @@ import de.cybine.quarkus.util.converter.ConversionResult;
 import de.cybine.quarkus.util.converter.ConverterRegistry;
 import de.cybine.quarkus.util.datasource.*;
 import io.quarkus.runtime.Startup;
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.inject.Singleton;
-import jakarta.ws.rs.core.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
@@ -41,19 +43,14 @@ public class ActionService implements StatefulActionService
 {
     public static final String TERMINATED_STATE = "terminated";
 
-    private final List<Workflow> workflows = new ArrayList<>();
-
+    private final List<Workflow>        workflows  = new ArrayList<>();
     private final List<ActionProcessor> processors = new ArrayList<>();
 
-    private final ConverterRegistry      converterRegistry;
-    private final ActionDataTypeRegistry typeRegistry;
+    private final ConverterRegistry converterRegistry;
+    private final ContextService    contextService;
 
-    private final ContextService contextService;
-
-    private final SessionFactory sessionFactory;
-    private final ObjectMapper   objectMapper;
-
-    private final SecurityContext securityContext;
+    private final SessionFactory   sessionFactory;
+    private final SecurityIdentity securityIdentity;
 
     @Override
     public void registerWorkflow(Workflow workflow)
@@ -299,7 +296,6 @@ public class ActionService implements StatefulActionService
                                      .map(ActionMetadata::getAction)
                                      .orElseThrow();
 
-        System.out.println(previousState);
         ActionMetadata metadata = action.getMetadata();
         ActionProcessor processor = this.findProcessor(metadata, previousState).orElse(null);
         if (processor == null)
@@ -310,11 +306,12 @@ public class ActionService implements StatefulActionService
 
         ActionProcess process = ActionProcess.builder()
                                              .id(ActionProcessId.create())
+                                             .eventId(metadata.getEventId())
                                              .context(ActionContext.builder().id(contextId).build())
                                              .status(action.getAction())
                                              .priority(action.getPriority().orElse(100))
                                              .description(action.getDescription().orElse(null))
-                                             .creatorId(this.getIdentityName().orElse(null))
+                                             .creatorId(this.getIdentityName().or(metadata::getSource).orElse(null))
                                              .createdAt(action.getCreatedAt().orElse(ZonedDateTime.now()))
                                              .dueAt(action.getDueAt().orElse(null))
                                              .data(action.getData().orElse(null))
@@ -393,10 +390,10 @@ public class ActionService implements StatefulActionService
     {
         try
         {
-            if (this.securityContext.getUserPrincipal() == null)
+            if (this.securityIdentity == null || this.securityIdentity.getPrincipal() == null)
                 return Optional.empty();
 
-            return Optional.ofNullable(this.securityContext.getUserPrincipal().getName());
+            return Optional.ofNullable(this.securityIdentity.getPrincipal().getName());
         }
         catch (ContextNotActiveException | IllegalStateException exception)
         {
@@ -426,6 +423,6 @@ public class ActionService implements StatefulActionService
 
     private ActionHelper createHelper(ActionMetadata metadata, ActionResult<?> previousState)
     {
-        return new ActionHelper(this, metadata, previousState, this::updateItemId);
+        return new ActionHelper(this, metadata, previousState, this.securityIdentity, this::updateItemId);
     }
 }

@@ -1,9 +1,6 @@
 package de.cybine.factory.service.sensor;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.cybine.factory.data.poi.PointOfInterestId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,13 +15,12 @@ import java.util.Map;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class SensorEventData
 {
-    @JsonProperty("poi_id")
-    private final PointOfInterestId poiId;
+    @JsonProperty("reference_id")
+    private final String referenceId;
 
     @JsonProperty("action")
     private final String action;
 
-    @JsonAnyGetter
-    @JsonAnySetter
+    @JsonProperty("data")
     private final Map<String, Object> data;
 }

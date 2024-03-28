@@ -1,7 +1,7 @@
 package de.cybine.factory.api.v1.action.handle;
 
 import de.cybine.factory.data.action.process.ActionProcess;
-import de.cybine.quarkus.util.api.response.ApiResponse;
+import de.cybine.quarkus.api.response.ApiResponse;
 import io.quarkus.security.Authenticated;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;

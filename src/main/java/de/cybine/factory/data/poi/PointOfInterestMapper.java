@@ -24,6 +24,8 @@ public class PointOfInterestMapper implements EntityMapper<PointOfInterestEntity
     {
         return PointOfInterestEntity.builder()
                                     .id(data.findId().map(Id::getValue).orElse(null))
+                                    .serverId(data.getServerId())
+                                    .world(data.getWorld())
                                     .xLocation(helper.optional(data::getLocation).map(PointLocation::x).orElse(null))
                                     .yLocation(helper.optional(data::getLocation).map(PointLocation::y).orElse(null))
                                     .zLocation(helper.optional(data::getLocation).map(PointLocation::z).orElse(null))
@@ -40,6 +42,8 @@ public class PointOfInterestMapper implements EntityMapper<PointOfInterestEntity
 
         return PointOfInterest.builder()
                               .id(entity.findId().map(PointOfInterestId::of).orElse(null))
+                              .serverId(entity.getServerId())
+                              .world(entity.getWorld())
                               .location(location)
                               .type(entity.getType())
                               .build();

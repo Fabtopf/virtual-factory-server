@@ -7,9 +7,10 @@ import de.cybine.factory.data.action.context.ActionContext;
 import de.cybine.factory.data.action.process.ActionProcess;
 import de.cybine.factory.service.action.ActionService;
 import de.cybine.factory.service.action.ContextService;
+import de.cybine.quarkus.api.response.ApiResponse;
 import de.cybine.quarkus.exception.action.ActionProcessingException;
 import de.cybine.quarkus.util.action.data.*;
-import de.cybine.quarkus.util.api.response.ApiResponse;
+import de.cybine.quarkus.util.api.ApiQueryHelper;
 import io.quarkus.security.Authenticated;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
@@ -36,10 +37,10 @@ public class HandleResource implements HandleApi
     public RestResponse<ApiResponse<String>> create(String namespace, String category, String name, String itemId)
     {
         return ApiResponse.<String>builder()
-                          .status(RestResponse.Status.CREATED)
+                          .statusCode(RestResponse.Status.CREATED.getStatusCode())
                           .value(this.actionService.beginWorkflow(namespace, category, name, itemId))
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
@@ -55,7 +56,10 @@ public class HandleResource implements HandleApi
         ActionContext context = this.contextService.fetchByCorrelationId(correlationId).orElseThrow();
         ActionProcess currentState = this.actionService.fetchCurrentState(correlationId).orElseThrow();
         if (eventId != null && !Objects.equals(currentState.getEventId(), eventId))
-            return ApiResponse.<ActionProcess>builder().status(RestResponse.Status.CONFLICT).build().toResponse();
+            return ApiResponse.<ActionProcess>builder()
+                              .statusCode(RestResponse.Status.CONFLICT.getStatusCode())
+                              .build()
+                              .transform(ApiQueryHelper::createResponse);
 
         ActionData<Object> actionData = null;
         if (data != null)
@@ -94,7 +98,7 @@ public class HandleResource implements HandleApi
         return ApiResponse.<ActionProcess>builder()
                           .value(this.actionService.fetchCurrentState(correlationId).orElseThrow())
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 
     @Override
@@ -106,6 +110,6 @@ public class HandleResource implements HandleApi
                                                    .map(ActionProcessorMetadata::getAction)
                                                    .toList())
                           .build()
-                          .toResponse();
+                          .transform(ApiQueryHelper::createResponse);
     }
 }

@@ -40,12 +40,13 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
 
     implementation("de.cybine.quarkus:action-processor:${cybineQuarkusUtilsVersion}")
+    implementation("de.cybine.quarkus:api-common:${cybineQuarkusUtilsVersion}")
     implementation("de.cybine.quarkus:api-query:${cybineQuarkusUtilsVersion}")
     implementation("de.cybine.quarkus:common:${cybineQuarkusUtilsVersion}")
     implementation("de.cybine.quarkus:datasource-query:${cybineQuarkusUtilsVersion}")
+    implementation("de.cybine.quarkus:event-manager:${cybineQuarkusUtilsVersion}")
     implementation("de.cybine.quarkus:type-converter:${cybineQuarkusUtilsVersion}")
 
-    implementation("com.fasterxml.uuid:java-uuid-generator:4.1.0")
     implementation("org.mindrot:jbcrypt:0.4")
 
     testImplementation("io.quarkus:quarkus-junit5")
