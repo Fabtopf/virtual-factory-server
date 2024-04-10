@@ -11,6 +11,7 @@ import de.cybine.quarkus.util.api.query.ApiCountQuery;
 import de.cybine.quarkus.util.api.query.ApiOptionQuery;
 import de.cybine.quarkus.util.api.query.ApiQuery;
 import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import org.jboss.resteasy.reactive.RestResponse;
@@ -18,7 +19,6 @@ import org.jboss.resteasy.reactive.RestResponse;
 import java.util.List;
 import java.util.Map;
 
-@Authenticated
 @ApplicationScoped
 @RequiredArgsConstructor
 public class SensorResource implements SensorApi
@@ -26,6 +26,7 @@ public class SensorResource implements SensorApi
     private final SensorService service;
 
     @Override
+    @Authenticated
     public RestResponse<ApiResponse<Sensor>> fetchById(long id)
     {
         return ApiResponse.<Sensor>builder()
@@ -35,6 +36,7 @@ public class SensorResource implements SensorApi
     }
 
     @Override
+    @Authenticated
     public RestResponse<ApiResponse<Sensor>> fetchByReferenceId(String referenceId)
     {
         return ApiResponse.<Sensor>builder()
@@ -44,6 +46,7 @@ public class SensorResource implements SensorApi
     }
 
     @Override
+    @PermitAll
     public RestResponse<ApiResponse<Void>> processEvent(String referenceId, String action, Map<String, Object> data)
     {
         this.service.processEvent(SensorEventData.builder().referenceId(referenceId).action(action).data(data).build());
@@ -51,6 +54,7 @@ public class SensorResource implements SensorApi
     }
 
     @Override
+    @Authenticated
     public RestResponse<ApiResponse<String>> startRecording(String referenceId)
     {
         return ApiResponse.<String>builder()
@@ -60,6 +64,7 @@ public class SensorResource implements SensorApi
     }
 
     @Override
+    @Authenticated
     public RestResponse<ApiResponse<Void>> stopRecording(String referenceId)
     {
         this.service.stopEventRecording(referenceId);
@@ -67,6 +72,7 @@ public class SensorResource implements SensorApi
     }
 
     @Override
+    @Authenticated
     public RestResponse<ApiResponse<List<Sensor>>> fetch(ApiQuery query)
     {
         return ApiResponse.<List<Sensor>>builder()
@@ -76,6 +82,7 @@ public class SensorResource implements SensorApi
     }
 
     @Override
+    @Authenticated
     public RestResponse<ApiResponse<Sensor>> fetchSingle(ApiQuery query)
     {
         return ApiResponse.<Sensor>builder()
@@ -85,6 +92,7 @@ public class SensorResource implements SensorApi
     }
 
     @Override
+    @Authenticated
     public RestResponse<ApiResponse<List<ApiCountInfo>>> fetchCount(ApiCountQuery query)
     {
         return ApiResponse.<List<ApiCountInfo>>builder()
@@ -94,6 +102,7 @@ public class SensorResource implements SensorApi
     }
 
     @Override
+    @Authenticated
     public RestResponse<ApiResponse<List<Object>>> fetchOptions(ApiOptionQuery query)
     {
         return ApiResponse.<List<Object>>builder()
