@@ -1,11 +1,12 @@
 plugins {
     java
     id("io.quarkus")
-    id("io.freefair.lombok") version "8.1.0"
+    id("io.freefair.lombok") version "8.4"
 }
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven(url = "https://repository.cybine.de/repository/maven-public/")
 }
 
